@@ -12,8 +12,8 @@ class App extends Component {
       "","","","","","","","",
       "","","","","","","","",
       "","","","","","","","",
-      "","","","white","black","black","black","",
-      "","","","black","white","white","white","",
+      "","","","black","white","","","",
+      "","","","white","black","","","",
       "","","","","","","","",
       "","","","","","","","",
       "","","","","","","","",
@@ -26,8 +26,8 @@ class App extends Component {
   }
 
   changePlayer = (e) => {
-    const id = e.target.id
-    if(this.state.checkedboard[id] === ""){
+    const indexClicked = e.target.id
+    if(this.state.checkedboard[indexClicked] === ""){
       this.setState(
         {
           ...this.state,
@@ -42,29 +42,45 @@ class App extends Component {
         }else{
           cellColor = "white"
         }
-          if(this.state.checkedboard[id-1] && this.state.checkedboard[id-1] !== cellColor){
-            let count = 1;
 
-            while(this.state.checkedboard[(id-count)] !== "" && this.state.checkedboard[(id -count)] !== cellColor){
-              count ++
-            }
-            const newCell = id - count;
+        const play = (x) => {
+        console.log("x", x)
+        if(this.state.checkedboard[indexClicked-x] && this.state.checkedboard[indexClicked-x] !== cellColor){
+          let count = x;
+          console.log('ok', x)
 
-            if(this.state.checkedboard[newCell] === cellColor){
-              this.setState((state) => {
-                state.checkedboard[id]=cellColor;
-                let i = id;
-                for(i ; i >= (id-count); i--){
-                  state.checkedboard[i]=cellColor
-                  console.log("i", i)
-                }
-                return{
-                  checkedboard: state.checkedboard,
-                  ...state,
-                }
-              });
-            }
+          while(this.state.checkedboard[(indexClicked-count)] !== "" && this.state.checkedboard[(indexClicked -count)] !== cellColor){
+            console.log('inwhile')
+            count +=x
           }
+          const newCell =indexClicked - count;
+          console.log("count", count)
+          if(this.state.checkedboard[newCell] === cellColor){
+            this.setState((state) => {
+              state.checkedboard[indexClicked]=cellColor;
+              let i =indexClicked;
+              console.log("last condition", x)
+                if (x > 0) {
+                  for(i ; i >= (indexClicked-count); i-=x){
+                    state.checkedboard[i]=cellColor
+                  }
+                } else {
+                  for(i ; i <= (indexClicked-count); i-=x){
+                    state.checkedboard[i]=cellColor
+                  }
+                }
+
+              return{
+                checkedboard: state.checkedboard,
+                ...state,
+              }
+            });
+          }
+        }
+      }
+
+      const intervalles = [-9,-8,-7,-1,1,7,8,9];
+      intervalles.forEach(x => play(x))
     }
   }
   createGrille = () => {
